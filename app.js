@@ -1,16 +1,24 @@
 //import express from "express";
 //import mongoose from "mongoose";
-const express= require('express');
-const mongoose= require('mongoose');
-const { default: userRouter } = require('./routes/UserRoutes');
+import express from 'express';
+import dotenv from 'dotenv';
+
+import mongoose from 'mongoose';
+import adminRouter from 'file:///C:/Users/Admin/OneDrive/Desktop/AMS/routes/AdminRouters.js';
+import userRouter from 'file:///C:/Users/Admin/OneDrive/Desktop/AMS/routes/UserRoutes.js';
+
+dotenv.config();
+
 mongoose.connect("mongodb+srv://avishkartech8:STa00Rn7JNPeKJ6S@cluster0.hebea3r.mongodb.net/");
+
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 4000
 
 //middelwares
 app.use(express.json());
 app.use("/user",userRouter)
+app.use("/admin", adminRouter);
 
-app.listen(port, ()=>{
-    console.log(`conneted to ${port}`);
+app.listen(PORT, ()=>{
+    console.log(`conneted to ${PORT}`);
 })
