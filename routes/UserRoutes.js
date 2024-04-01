@@ -1,5 +1,8 @@
-import express from "express";
-import { getAllUsers } from "../controllers/UserController";
+//import express from "express";
+
+const express= require('express');
+import {  getAllUsers, signUp } from "../controllers/UserController";
 const userRouter = express.Router();
-userRouter.get('/', getAllUsers)
+userRouter.get('/', getAllUsers);
+userRouter.post('/signup', signUp);
 export default userRouter;
