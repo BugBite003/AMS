@@ -1,21 +1,26 @@
 /** @format */
 import bcrypt from "bcryptjs";
 
+
 import user from "file:///C:/Users/Admin/OneDrive/Desktop/AMS/models/User.js";
 
 export const getAllUsers = async (req, res, next) => {
-	let users;
-	try {
-		users = await user.find();
-	} catch (err) {
-		return console.log(err);
-	}
-	if (!users) {
-		return res.status(500).json({
-			message: "Unexpected error occured.",
-		});
-	}
-	return res.status(200).json({ users });
+	user.find()
+	.then((users) => res.json(users))
+	.catch(err => res.json(err))
+	// let users;
+	// try {
+	// 	users = await user.find({});
+	// } catch (err) {
+	// 	res.json("fail");
+	// 	return console.log(err);
+	// }
+	// if (!users) {
+	// 	return res.status(500).json({
+	// 		message: "Unexpected error occured.",
+	// 	});
+	// }
+	// return res.status(200).json({ users });
 };
 
 export const signUp = async (req, res, next) => {
@@ -88,25 +93,19 @@ export const deleteUser = async (req, res, next) => {
 };
 
 export const logIn = async (req, res, next) => {
-	const { email, password } = req.body;
-	if (!email && email.trim() === "" && !password && password.trim() === "") {
-		return res.status(400).json({ message: "Invalid Inputs" });
-	}
-	let existingUser;
-	try {
-		existingUser = await user.findOne({ email });
-	} catch (err) {
-		return res.send(err.message);
-	}
-	if (!existingUser) {
-		return res.status(400).json({ message: "User not found" });
-	}
+	const { username, password } = req.body;
 
-	const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password);
-	if (!isPasswordCorrect) {
-		return res.status(400).json({ message: "Incorrect Password" });
-	}
-	return res
-		.status(200)
-		.json({ message: "Login Successful", id: existingUser._id });
+    // Check if username and password are provided
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password are required' });
+    }
+
+    // Check if user exists
+    const user = users.find(u => u.username === username && u.password === password);
+    if (!user) {
+        return res.status(401).json({ error: 'Invalid username or password' });
+    }
+
+    // Login successful
+    res.status(200).json({ message: 'Login successful', user });
 };
