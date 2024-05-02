@@ -64,24 +64,24 @@ const Admin2 = () => {
 			.catch((error) => console.log(error));
 	};
 
+	const handleResetAttendance = () => {
+		// Reset attendance for all users to default value
+		users.forEach((user) => {
+			axios.put("http://localhost:4000/updateStudentF/" + user._id, { attendance: " " })
+				.then((response) => console.log("Attendance reset for", user.name))
+				.catch((error) => console.error("Error resetting attendance for", user.name, error));
+		});
+	};
+
 	return (
 		<div className='d-flex w-100 vh-100 bg-primary justify-content-center align-items-center'>
 			<div className='w-50 bg-white rounded p-3'>
-				<Link
-					to='/create'
-					className='btn btn-success'>
-					Add +
-				</Link>
-				<Link
-					to='/face-recognition'
-					className='btn btn-primary ml-2'>
-					Face Recognition
-				</Link>
+				<Link to='/create' className='btn btn-success'>Add +</Link>
+				<Link to='/face-recognition' className='btn btn-primary ml-2'>Face Recognition</Link>
+				<button onClick={handleResetAttendance} className='btn btn-warning ml-2'>Reset Attendance</button>
 				{tagID && (
 					// Render tag ID if available
-					<div
-						className='alert alert-info mt-3'
-						role='alert'>
+					<div className='alert alert-info mt-3' role='alert'>
 						Received Tag ID: {tagID}
 					</div>
 				)}
@@ -104,16 +104,8 @@ const Admin2 = () => {
 								<td>{user.attendance}</td>
 								<td>
 									<div className='d-flex flex-column'>
-										<Link
-											to={`/update/${user._id}`}
-											className='btn btn-success'>
-											Update
-										</Link>
-										<button
-											className='btn btn-danger mt-2'
-											onClick={() => handleDelete(user._id)}>
-											Delete
-										</button>
+										<Link to={`/update/${user._id}`} className='btn btn-success'>Update</Link>
+										<button className='btn btn-danger mt-2' onClick={() => handleDelete(user._id)}>Delete</button>
 									</div>
 								</td>
 							</tr>
@@ -121,7 +113,6 @@ const Admin2 = () => {
 					</tbody>
 				</table>
 			</div>
-			
 		</div>
 	);
 };
